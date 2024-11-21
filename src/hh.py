@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 import json
+from unittest import result
+
 import requests
 
 
@@ -18,12 +20,12 @@ class HH(Parser):
     Класс Parser является родительским классом, который вам необходимо реализовать
     """
 
-    def __init__(self, file_worker):
+    def __init__(self):
         self.__url = 'https://api.hh.ru/vacancies'
         self.__headers = {'User-Agent': 'HH-User-Agent'}
         self.__params = {'text': '', 'page': 0, 'per_page': 100}
         self.__vacancies = []
-        super().__init__(file_worker)
+
 
     def __api_connect(self):
         """Подключение к API hh.ru"""
@@ -39,3 +41,9 @@ class HH(Parser):
             vacancies = response.json()['items']
             self.__vacancies.extend(vacancies)
             self.__params['page'] += 1
+
+
+if __name__ == "__main__":
+    data = HH()
+    result = data.load_vacancies("программист")
+    print(result)
