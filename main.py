@@ -1,6 +1,6 @@
-from src.utils import get_vacancies_by_salary_from, get_top_vacancies
 from src.hh import HH
 from src.json_file import JSONSaver
+from src.utils import get_top_vacancies, get_vacancies_by_salary_from
 from src.vacancy import Vacancy
 
 
@@ -50,7 +50,9 @@ def user_interaction():
 
     elif action == 3:
         try:
-            salary_from = int(input("Укажите нижний порог зарплаты (целое число от 0): "))
+            salary_from = int(
+                input("Укажите нижний порог зарплаты (целое число от 0): ")
+            )
         except ValueError:
             print("Некорректный ввод. Нижний порог не указан")
             salary_from = 0
@@ -76,9 +78,13 @@ def user_interaction():
             print()
 
     elif action == 5:
-        vacancy = Vacancy(input("Введите название: "), input("Введите ссылку на вакансию: "),
-                          input("Введите требования к работе: "), input("Введите рабочие обязанности: "),
-                          int(input("Введите зарплату: ")))
+        vacancy = Vacancy(
+            input("Введите название: "),
+            input("Введите ссылку на вакансию: "),
+            input("Введите требования к работе: "),
+            input("Введите рабочие обязанности: "),
+            int(input("Введите зарплату: ")),
+        )
         saver.add_vacancy(vacancy)
 
     elif action == 6:
@@ -90,4 +96,3 @@ def user_interaction():
 
 if __name__ == "__main__":
     user_interaction()
-

@@ -1,4 +1,5 @@
-from src.utils import get_top_vacancies, get_vacancies_by_salary_from, sort_vacancies_by_salary
+from src.utils import (get_top_vacancies, get_vacancies_by_salary_from,
+                       sort_vacancies_by_salary)
 from src.vacancy import Vacancy
 
 

@@ -1,8 +1,11 @@
 class Vacancy:
     """Класс для представления вакансий"""
+
     __slots__ = ("name", "url", "requirement", "responsibility", "salary")
 
-    def __init__(self, name: str, url: str, requirement: str, responsibility: str, salary=None):
+    def __init__(
+        self, name: str, url: str, requirement: str, responsibility: str, salary=None
+    ):
         """Инициализатор класса Vacancy"""
         self.name = name
         self.url = url
@@ -26,8 +29,10 @@ class Vacancy:
     def __str__(self):
         """Метод строкового предсиавления вакансий"""
 
-        return (f"{self.name} (Зарплата: {self.salary if self.salary else 'не указана'}).\nТребования: {self.requirement}.\n"
-                f"Обязанности: {self.responsibility}.\nСсылка на вакансию: {self.url}")
+        return (
+            f"{self.name} (Зарплата: {self.salary if self.salary else 'не указана'}).\nТребования: {self.requirement}.\n"
+            f"Обязанности: {self.responsibility}.\nСсылка на вакансию: {self.url}"
+        )
 
     @classmethod
     def __verify_data(cls, other):
@@ -54,5 +59,10 @@ class Vacancy:
 
     def to_dict(self):
         """Возвращает словарь с данными о вакансии из экземпляра класса Vacancy"""
-        return {"name": self.name, "url": self.url, "requirement": self.requirement,
-                "responsibility": self.responsibility, "salary": self.salary}
+        return {
+            "name": self.name,
+            "url": self.url,
+            "requirement": self.requirement,
+            "responsibility": self.responsibility,
+            "salary": self.salary,
+        }

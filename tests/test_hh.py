@@ -1,5 +1,6 @@
-from src.hh import HH
 from unittest.mock import patch
+
+from src.hh import HH
 
 
 @patch("requests.get")
