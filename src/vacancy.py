@@ -1,47 +1,58 @@
 class Vacancy:
-    __slots__ = ('title', 'alternate_url', 'name', 'salary', 'salary_from', 'salary_to')
-    def __init__(self, title, alternate_url, name, salary):
-        self.title = title
-        self.alternate_url = alternate_url
+    """Класс для представления вакансий"""
+    __slots__ = ("name", "url", "requirement", "responsibility", "salary")
+
+    def __init__(self, name: str, url: str, requirement: str, responsibility: str, salary=None):
+        """Инициализатор класса Vacancy"""
         self.name = name
-        self.salary = salary
-        self.validate__()
+        self.url = url
+        self.requirement = requirement
+        self.responsibility = responsibility
+        self.salary = self.__salary_validation(salary)
 
-    def validate__(self):
-        """Валидация отображения ЗП по признаку отсутствия информации или цифр в графе ЗП от или до"""
-        if not self.salary:
-            self.salary_from = 0
-            self.salary_to = 0
-            return
-
-        if not self.salary["from"]:
-            self.salary_from = 0
-        else:
-            self.salary_from = self.salary["from"]
-
-        if not self.salary["to"]:
-            self.salary_to = 0
-        else:
-            self.salary_to = self.salary["to"]
+    @staticmethod
+    def __salary_validation(salary: int):
+        """Валидация зарплаты"""
+        if salary:
+            return salary
+        return 0
 
     @classmethod
-    def create_vacancies(cls, hh_vacancies):
-        """Преобразование словарей из json файла в экземпляры класса Vacancy"""
-        instances_vacancy = []
-        for vacancies_info in hh_vacancies:
-            title = vacancies_info['name']
-            alternate_url = vacancies_info['alternate_url']
-            salary = vacancies_info['salary']
-            name = vacancies_info['area']['name']
-            vacancy = cls(title, alternate_url, name, salary)
-            instances_vacancy.append(vacancy)
-        return instances_vacancy
+    def cast_to_object_list(cls, vacancies: list[dict]) -> list["Vacancy"]:
+        """Возвращает список экземпляров Vacancy из списка словарей"""
 
-    def __lt__(self, other):
-        """Сравнение экземпляров класса Vacancy по ЗП"""
-        return self.salary_from < other.salary_from
+        return [cls(**vac) for vac in vacancies]
 
     def __str__(self):
-        """Вывод объекта класса Vacanсy для пользователя"""
-        return f'{self.title}, город {self.name}, ЗП от {self.salary_from} до {self.salary_to}, ссылка: {self.alternate_url}'
+        """Метод строкового предсиавления вакансий"""
 
+        return (f"{self.name} (Зарплата: {self.salary if self.salary else 'не указана'}).\nТребования: {self.requirement}.\n"
+                f"Обязанности: {self.responsibility}.\nСсылка на вакансию: {self.url}")
+
+    @classmethod
+    def __verify_data(cls, other):
+        """Проверка типа данных"""
+        if not isinstance(other, (float, Vacancy)):
+            raise TypeError
+
+        return other if isinstance(other, float) else other.salary
+
+    def __eq__(self, other):
+        """Метод сравнения вакансий (=)"""
+        sal = self.__verify_data(other)
+        return self.salary == sal
+
+    def __lt__(self, other):
+        """Метод сравнения вакансий (<)"""
+        sal = self.__verify_data(other)
+        return self.salary < sal
+
+    def __le__(self, other):
+        """Метод сравнения вакансий (<=)"""
+        sal = self.__verify_data(other)
+        return self.salary <= sal
+
+    def to_dict(self):
+        """Возвращает словарь с данными о вакансии из экземпляра класса Vacancy"""
+        return {"name": self.name, "url": self.url, "requirement": self.requirement,
+                "responsibility": self.responsibility, "salary": self.salary}

@@ -1,24 +1,20 @@
-def filter_vacancies(vacancies, filter_city):
-    """Фильтрует вакансии по городу """
-    return [v for v in vacancies if v.name == filter_city]
+from src.vacancy import Vacancy
 
 
-def sort_vacancies(vacancies):
-    """Сортирует список вакансий по убыванию зарплаты"""
-    return sorted(vacancies, reverse=True)
+def get_vacancies_by_salary_from(vacancies: list[Vacancy], salary_from: int) -> list[Vacancy]:
+    """Возвращает список вакансий в заданном диапазоне зарплат"""
+
+    return [vac for vac in vacancies if vac.salary >= salary_from]
 
 
-def get_top_vacancies(vacancies, n):
-    """Возвращает указанное количество вакансий"""
-    sorted_vacancies = sort_vacancies(vacancies)
-    return sorted_vacancies[:n]
+def sort_vacancies_by_salary(vacancies: list[Vacancy]) -> list[Vacancy]:
+    """Сортирует вакансии по зарплате"""
+
+    return sorted(vacancies, key=lambda vacancy: vacancy.salary, reverse=True)
 
 
-def print_vacancies(vacancies):
-    """Выводит информацию о вакансиях в консоль"""
-    if vacancies:
-        for v in vacancies:
-            print(v)
-            print('-' * 100)
-    else:
-        print("Нет подходящих вакансий")
+def get_top_vacancies(vacancies: list[Vacancy], top_n: int) -> list[Vacancy]:
+    """Возвращает топ N вакансий по зарплате"""
+    sorted_vacancies = sort_vacancies_by_salary(vacancies)
+
+    return sorted_vacancies[:top_n]

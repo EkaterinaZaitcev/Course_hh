@@ -1,7 +1,4 @@
 from abc import ABC, abstractmethod
-import json
-from unittest import result
-
 import requests
 
 
@@ -27,16 +24,38 @@ class HH(Parser):
         self.__vacancies = []
 
 
-    def load_vacancies(self, keyword):
-        try:
-            self.__params['text'] = keyword
-            while self.__params.get('page') != 20:
-                response = requests.get(self.__url, headers=self.__headers, params=self.__params)
+    def load_vacancies(self, keyword: str) -> list:
+        """Получение вакансий по ключевому слову"""
+        self.__params['text'] = keyword
+        while self.__params.get('page') != 20:
+            response = requests.get(self.__url, headers=self.__headers, params=self.__params)
+            if response:
                 vacancies = response.json()['items']
                 self.__vacancies.extend(vacancies)
                 self.__params['page'] += 1
-                #print(vacancies)
-        except Exception as e:
-            print(e)
-            print("Ошибка в классе HH")
-            return []
+                print (vacancies)
+            else:
+                break
+        vacancies_list = []
+        if self.__vacancies:
+            """Получение списка словарей с ключами name, url, requirement, responsibility, salary"""
+            for vacancy in self.__vacancies:
+                name = vacancy.get("name")
+                url = vacancy.get("alternate_url")
+                requirement = vacancy.get("snippet").get("requirement")
+                responsibility = vacancy.get("snippet").get("responsibility")
+                if vacancy.get("salary"):
+                    if vacancy.get("salary").get("to"):
+                        salary = vacancy.get("salary").get("to")
+                    elif vacancy.get("salary").get("from"):
+                        salary = vacancy.get("salary").get("from")
+                else:
+                    salary = 0
+                vac = {"name": name, "url": url, "requirement": requirement, "responsibility": responsibility,
+                        "salary": salary}
+                vacancies_list.append(vac)
+        return vacancies_list
+
+"""if __name__ == '__main__':
+    my_api = HH()
+    response = my_api.load_vacancies('Разработчик')"""
